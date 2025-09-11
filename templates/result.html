@@ -1,86 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Formato Generado</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f9fafb;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #2563eb;
-        }
-        .field {
-            margin-bottom: 20px;
-        }
-        .label {
-            font-weight: bold;
-            color: #374151;
-        }
-        .value {
-            margin-top: 5px;
-            padding: 12px;
-            background: #f3f4f6;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            white-space: pre-wrap;
-        }
-        .buttons {
-            margin-top: 25px;
-            text-align: center;
-        }
-        .btn {
-            display: inline-block;
-            margin: 5px;
-            padding: 10px 16px;
-            background: #2563eb;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .btn:hover { background: #1d4ed8; }
-    </style>
+  <meta charset="UTF-8">
+  <title>Formato Generado</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2563eb;
+      margin-bottom: 20px;
+    }
+    .field {
+      margin-bottom: 20px;
+    }
+    .label {
+      font-weight: bold;
+      color: #374151;
+      margin-bottom: 5px;
+    }
+    .value {
+      padding: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      white-space: pre-wrap; /* Mantiene saltos de línea */
+    }
+    .buttons {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 16px;
+      background: #2563eb;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      font-size: 15px;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Formato Generado</h1>
+  <div class="container">
+    <h1>Formato Generado</h1>
 
-        {% for label, value in fields.items() %}
-        <div class="field">
-            <div class="label">{{ label }}</div>
-            <div class="value">{{ value }}</div>
-        </div>
-        {% endfor %}
-
-        <div class="buttons">
-            <button class="btn" onclick="copyText()">📋 Copiar todo</button>
-            <a href="/" class="btn">⬅️ Volver</a>
-        </div>
+    {% for label, value in fields.items() %}
+    <div class="field">
+      <div class="label">{{ label }}</div>
+      <div class="value" id="field-{{ loop.index }}">{{ value }}</div>
     </div>
+    {% endfor %}
 
-    <script>
-        function copyText() {
-            let text = "";
-            document.querySelectorAll(".value").forEach(el => {
-                text += el.innerText + "\n\n";
-            });
-            navigator.clipboard.writeText(text.trim()).then(() => {
-                alert("✅ Texto copiado al portapapeles");
-            });
-        }
-    </script>
+    <div class="buttons">
+      <button class="btn" onclick="copyText()">📋 Copiar todo</button>
+      <a href="/" class="btn">⬅️ Volver</a>
+    </div>
+  </div>
+
+  <script>
+    function copyText() {
+      let text = "";
+      document.querySelectorAll(".field").forEach(el => {
+        const label = el.querySelector(".label").innerText;
+        const value = el.querySelector(".value").innerText;
+        text += label + " " + value + "\n";
+      });
+      navigator.clipboard.writeText(text.trim()).then(() => {
+        alert("✅ Texto copiado al portapapeles");
+      });
+    }
+  </script>
 </body>
 </html>
