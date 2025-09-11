@@ -2,28 +2,27 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
+    if request.method == "POST":
+        # Tomar los datos del formulario
+        tipo = request.form.get("tipo", "").strip()
+        nombre = request.form.get("nombre", "").strip()
+        descripcion = request.form.get("descripcion", "").strip()
+        adicional = request.form.get("adicional", "").strip()
+
+        # Construir campos para enviar al template
+        fields = {
+            "📌 Tipo de Solicitud": tipo or "(sin especificar)",
+            "👤 Nombre del Solicitante": nombre or "(sin nombre)",
+            "📝 Descripción": descripcion or "(sin descripción)",
+            "📎 Información adicional": adicional or "(ninguna)"
+        }
+
+        return render_template("result.html", fields=fields)
+
+    # Si es GET, muestra el formulario
     return render_template("form.html")
-
-@app.route("/generar", methods=["POST"])
-def generar():
-    usuario = request.form.get("usuario")
-    placa = request.form.get("placa")
-    medio = request.form.get("medio")
-    tipo = request.form.get("tipo")
-    opcion = request.form.get("opcion")
-    adicional = request.form.get("adicional")
-
-    # La solución se arma como antes
-    solucion = f"{opcion}. {adicional}" if adicional else opcion
-
-    return render_template("result.html",
-                           tipo=tipo,
-                           medio=medio,
-                           placa=placa,
-                           opcion=opcion,
-                           solucion=solucion)
 
 if __name__ == "__main__":
     app.run(debug=True)
