@@ -1,103 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Generador de Formatos</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(135deg, #29538F, #1D4057);
-      color: #f1faee;
-      min-height: 100vh;
-    }
-    .card {
-      border-radius: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    .form-label {
-      font-weight: bold;
-    }
-    .btn-primary {
-      background-color: #e63946;
-      border: none;
-    }
-    .btn-primary:hover {
-      background-color: #d62839;
-    }
-    pre {
-      background: #f8f9fa;
-      color: #212529;
-      padding: 1rem;
-      border-radius: .5rem;
-      white-space: pre-wrap;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Generador de Formatos</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .resultado { margin-top: 20px; white-space: pre-line; background: #f4f4f4; padding: 10px; border-radius: 5px; }
+        .preview { background: #eef; padding: 10px; margin-top: 10px; border: 1px solid #99c; border-radius: 5px; }
+    </style>
 </head>
 <body>
-<div class="container py-7">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card p-4 bg-dark text-light">
-        <h2 class="mb-4 text-center">🛠️ Generador de Cierre de Casos</h2>
-        <form method="POST">
-          <div class="mb-3">
-            <label class="form-label">👤 Usuario</label>
-            <input type="text" name="usuario" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">💻 Placa</label>
-            <input type="text" name="placa" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">🌐 Medio</label>
-            <select name="medio" class="form-select" required>
-              <option value="1">Presencial</option>
-              <option value="2">Virtual</option>
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">👉🤷‍♂️👈 Tipo</label><br>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="tipo" value="req" checked>
-              <label class="form-check-label">Requerimiento</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="tipo" value="inc">
-              <label class="form-check-label">Incidente</label>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">📋 Opción</label>
-            <select name="opcion" class="form-select" required>
-              {% for key, value in requerimientos.items() %}
-                <option value="{{ key }}">{{ value }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">📝 Detalles adicionales (opcional)</label>
-            <textarea name="detalles" class="form-control" rows="3"></textarea>
-          </div>
-          <button class="btn btn-primary w-100">Generar Formato</button>
-        </form>
-      </div>
-    </div>
-  </div>
+    <h2>Generador de Formatos</h2>
+    <form method="POST">
+        <label>Usuario:</label><br>
+        <input type="text" name="usuario" required><br><br>
 
-  {% if resultado %}
-  <div class="row justify-content-center mt-4">
-    <div class="col-md-8">
-      <div class="card p-4">
-        <h4 class="mb-3 text-dark">📄 Resultado</h4>
+        <label>Placa:</label><br>
+        <input type="text" name="placa" required><br><br>
+
+        <label>Medio:</label><br>
+        <select name="medio" required>
+            <option value="1">Presencial</option>
+            <option value="2">Virtual</option>
+        </select><br><br>
+
+        <label>Tipo:</label><br>
+        <select name="tipo" id="tipo" required>
+            <option value="req">Requerimiento</option>
+            <option value="inc">Incidente</option>
+        </select><br><br>
+
+        <label>Opción:</label><br>
+        <select name="opcion" id="opcion" required></select><br><br>
+
+        <label>Solución sugerida:</label>
+        <div class="preview" id="solucionPreview">Selecciona una opción...</div>
+
+        <label>Detalles adicionales:</label><br>
+        <textarea name="detalles" rows="4" cols="50"></textarea><br><br>
+
+        <button type="submit">Generar</button>
+    </form>
+
+    {% if resultado %}
+    <div class="resultado">
+        <h3>Formato generado:</h3>
         <pre>{{ resultado }}</pre>
-      </div>
     </div>
-  </div>
-  {% endif %}
-</div>
+    {% endif %}
+
+    <script>
+        const requerimientos = {{ requerimientos|tojson }};
+        const incidentes = {{ incidentes|tojson }};
+
+        const tipoSelect = document.getElementById('tipo');
+        const opcionSelect = document.getElementById('opcion');
+        const solucionPreview = document.getElementById('solucionPreview');
+
+        function actualizarOpciones() {
+            const tipo = tipoSelect.value;
+            const opciones = tipo === 'req' ? requerimientos : incidentes;
+
+            opcionSelect.innerHTML = '';
+            for (const [key, value] of Object.entries(opciones)) {
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = value[0];
+                opcionSelect.appendChild(option);
+            }
+            actualizarPreview();
+        }
+
+        function actualizarPreview() {
+            const tipo = tipoSelect.value;
+            const opciones = tipo === 'req' ? requerimientos : incidentes;
+            const seleccion = opcionSelect.value;
+            solucionPreview.textContent = seleccion && opciones[seleccion]
+                ? opciones[seleccion][1]
+                : "Selecciona una opción...";
+        }
+
+        tipoSelect.addEventListener('change', actualizarOpciones);
+        opcionSelect.addEventListener('change', actualizarPreview);
+
+        window.onload = actualizarOpciones;
+    </script>
 </body>
 </html>
-
-
-
-
