@@ -2,39 +2,139 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador de Formatos</title>
+    <title>Generador de Formato</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f9fafb; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2563eb; }
-        label { display: block; margin-top: 15px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; }
-        button { margin-top: 20px; width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
-        button:hover { background: #1d4ed8; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2563eb;
+        }
+        .field {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Generar Formato</h1>
-        <form action="/generar" method="post">
-            <label for="tipo">Tipo de solicitud</label>
-            <select id="tipo" name="tipo" required>
-                <option value="">Seleccione...</option>
-                <option value="Requerimiento">Requerimiento</option>
-                <option value="Incidente">Incidente</option>
-            </select>
+        <form method="POST" action="/generar">
+            <div class="field">
+                <label>Usuario</label>
+                <input type="text" name="usuario" required>
+            </div>
 
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" required>
+            <div class="field">
+                <label>Placa Equipo</label>
+                <input type="text" name="placa" required>
+            </div>
 
-            <label for="descripcion">Descripción</label>
-            <textarea id="descripcion" name="descripcion" rows="5" required></textarea>
+            <div class="field">
+                <label>Medio</label>
+                <select name="medio" required>
+                    <option value="">-- Seleccione --</option>
+                    <option value="Presencial">Presencial</option>
+                    <option value="Virtual">Virtual</option>
+                </select>
+            </div>
 
-            <label for="adicional">Información adicional</label>
-            <textarea id="adicional" name="adicional" rows="4"></textarea>
+            <div class="field">
+                <label>Tipo</label>
+                <select id="tipo" name="tipo" required onchange="updateOpciones()">
+                    <option value="">-- Seleccione --</option>
+                    <option value="Requerimiento">Requerimiento</option>
+                    <option value="Incidente">Incidente</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Opción</label>
+                <select id="opcion" name="opcion" required>
+                    <option value="">-- Seleccione un tipo primero --</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Información adicional</label>
+                <textarea name="adicional" rows="4"></textarea>
+            </div>
 
             <button type="submit">Generar</button>
         </form>
     </div>
+
+    <script>
+        const opciones = {
+            "Requerimiento": [
+                "Actualización y configuración de Ivanty VPN",
+                "Actualización Ivanty",
+                "Instalación y configuración OpenVPN",
+                "Permisos de administrador",
+                "Permisos de admin temporal",
+                "Revisión por retiro",
+                "Alistamiento"
+            ],
+            "Incidente": [
+                "Falla en hardware",
+                "Error de software",
+                "Problema de conectividad",
+                "Interrupción del servicio"
+            ]
+        };
+
+        function updateOpciones() {
+            const tipo = document.getElementById("tipo").value;
+            const select = document.getElementById("opcion");
+            select.innerHTML = "<option value=''>-- Seleccione --</option>";
+
+            if (opciones[tipo]) {
+                opciones[tipo].forEach((op, i) => {
+                    const opt = document.createElement("option");
+                    opt.value = op;
+                    opt.text = `${i + 1}. ${op}`;
+                    select.appendChild(opt);
+                });
+            }
+        }
+    </script>
 </body>
 </html>
+
