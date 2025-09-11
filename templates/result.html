@@ -4,56 +4,15 @@
     <meta charset="UTF-8">
     <title>Formato Generado</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f9fafb;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #2563eb;
-        }
-        .field {
-            margin-bottom: 20px;
-        }
-        .label {
-            font-weight: bold;
-            color: #374151;
-        }
-        .value {
-            margin-top: 5px;
-            padding: 12px;
-            background: #f3f4f6;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            white-space: pre-wrap; /* Mantiene saltos de línea */
-        }
-        .buttons {
-            margin-top: 25px;
-            text-align: center;
-        }
-        .btn {
-            display: inline-block;
-            margin: 5px;
-            padding: 10px 16px;
-            background: #2563eb;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: #1d4ed8;
-        }
+        body { font-family: Arial, sans-serif; background: #f9fafb; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2563eb; }
+        .field { margin-bottom: 20px; }
+        .label { font-weight: bold; color: #374151; }
+        .value { margin-top: 5px; padding: 12px; background: #f3f4f6; border-radius: 8px; border: 1px solid #e5e7eb; white-space: pre-wrap; }
+        .buttons { margin-top: 25px; text-align: center; }
+        .btn { display: inline-block; margin: 5px; padding: 10px 16px; background: #2563eb; color: white; border-radius: 8px; text-decoration: none; cursor: pointer; }
+        .btn:hover { background: #1d4ed8; }
     </style>
 </head>
 <body>
@@ -63,7 +22,7 @@
         {% for label, value in fields.items() %}
         <div class="field">
             <div class="label">{{ label }}</div>
-            <div class="value" id="field-{{ loop.index }}">{{ value }}</div>
+            <div class="value">{{ value }}</div>
         </div>
         {% endfor %}
 
