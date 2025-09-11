@@ -23,23 +23,17 @@
       color: #2563eb;
       margin-bottom: 20px;
     }
-    .field {
-      margin-bottom: 20px;
-    }
-    .label {
-      font-weight: bold;
-      color: #374151;
-      margin-bottom: 5px;
-    }
-    .value {
-      padding: 12px;
+    pre {
       background: #f9fafb;
       border: 1px solid #e5e7eb;
+      padding: 15px;
       border-radius: 8px;
-      white-space: pre-wrap; /* Mantiene saltos de línea */
+      white-space: pre-wrap; /* respeta saltos de línea */
+      font-size: 15px;
+      line-height: 1.5;
     }
     .buttons {
-      margin-top: 30px;
+      margin-top: 20px;
       text-align: center;
     }
     .btn {
@@ -63,28 +57,18 @@
   <div class="container">
     <h1>Formato Generado</h1>
 
-    {% for label, value in fields.items() %}
-    <div class="field">
-      <div class="label">{{ label }}</div>
-      <div class="value" id="field-{{ loop.index }}">{{ value }}</div>
-    </div>
-    {% endfor %}
+    <pre id="output-text">{{ output_text }}</pre>
 
     <div class="buttons">
-      <button class="btn" onclick="copyText()">📋 Copiar todo</button>
+      <button class="btn" onclick="copyText()">📋 Copiar</button>
       <a href="/" class="btn">⬅️ Volver</a>
     </div>
   </div>
 
   <script>
     function copyText() {
-      let text = "";
-      document.querySelectorAll(".field").forEach(el => {
-        const label = el.querySelector(".label").innerText;
-        const value = el.querySelector(".value").innerText;
-        text += label + " " + value + "\n";
-      });
-      navigator.clipboard.writeText(text.trim()).then(() => {
+      let text = document.getElementById("output-text").innerText;
+      navigator.clipboard.writeText(text).then(() => {
         alert("✅ Texto copiado al portapapeles");
       });
     }
