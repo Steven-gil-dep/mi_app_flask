@@ -3,171 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <title>Generador de Formatos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      margin: 0;
-      padding: 20px;
+      background: linear-gradient(135deg, #1d3557, #457b9d);
+      color: #f1faee;
+      min-height: 100vh;
     }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    h1 {
-      text-align: center;
-      color: #2563eb;
-      margin-bottom: 20px;
-    }
-    label {
+    .form-label {
       font-weight: bold;
-      display: block;
-      margin-top: 15px;
-      color: #374151;
     }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      background: #f9fafb;
-    }
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      width: 100%;
-      background: #2563eb;
-      color: white;
+    .btn-primary {
+      background-color: #e63946;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
     }
-    button:hover {
-      background: #1d4ed8;
+    .btn-primary:hover {
+      background-color: #d62839;
     }
-    .preview {
-      margin-top: 30px;
-      padding: 20px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      background: #f9fafb;
-    }
-    .preview h2 {
-      margin-top: 0;
-      color: #111827;
-    }
-    .preview pre {
+    pre {
+      background: #f8f9fa;
+      color: #212529;
+      padding: 1rem;
+      border-radius: .5rem;
       white-space: pre-wrap;
-      font-family: inherit;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Generador de Formatos</h1>
-    <form method="POST">
-      <label for="usuario">Nombre del usuario:</label>
-      <input type="text" id="usuario" name="usuario" required oninput="updatePreview()">
-
-      <label for="placa">Placa del equipo:</label>
-      <input type="text" id="placa" name="placa" required oninput="updatePreview()">
-
-      <label for="medio">Medio:</label>
-      <select id="medio" name="medio" required onchange="updatePreview()">
-        <option value="">-- Selecciona --</option>
-        <option value="Presencial">Presencial</option>
-        <option value="Virtual">Virtual</option>
-      </select>
-
-      <label for="tipo">Tipo de solicitud:</label>
-      <select id="tipo" name="tipo" required onchange="toggleOpciones(); updatePreview();">
-        <option value="">-- Selecciona --</option>
-        <option value="Requerimiento">Requerimiento</option>
-        <option value="Incidente">Incidente</option>
-      </select>
-
-      <label for="opcion">Causa:</label>
-      <select id="opcion" name="opcion" required onchange="updatePreview()">
-        <option value="">-- Selecciona el tipo primero --</option>
-      </select>
-
-      <label for="adicional">Información adicional (opcional):</label>
-      <textarea id="adicional" name="adicional" oninput="updatePreview()"></textarea>
-
-      <button type="submit">Generar Formato</button>
-    </form>
-
-    <div class="preview">
-      <h2>Vista previa:</h2>
-      <pre id="previewText">Completa los campos para ver la vista previa aquí...</pre>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card p-4 bg-dark text-light">
+        <h2 class="mb-4 text-center">🛠️ Generador de Cierre de Casos</h2>
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">👤 Usuario</label>
+            <input type="text" name="usuario" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">💻 Placa</label>
+            <input type="text" name="placa" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">🌐 Medio</label>
+            <select name="medio" class="form-select" required>
+              <option value="1">Presencial</option>
+              <option value="2">Virtual</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">📌 Tipo</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="tipo" value="req" checked onclick="cargarOpciones('req')">
+              <label class="form-check-label">Requerimiento</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="tipo" value="inc" onclick="cargarOpciones('inc')">
+              <label class="form-check-label">Incidente</label>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">📋 Opción</label>
+            <select name="opcion" id="opcion" class="form-select" required>
+              <!-- Se llenará dinámicamente -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">📝 Detalles adicionales (opcional)</label>
+            <textarea name="detalles" class="form-control" rows="3"></textarea>
+          </div>
+          <button class="btn btn-primary w-100">Generar Formato</button>
+        </form>
+      </div>
     </div>
   </div>
 
-  <script>
-    const requerimientos = {{ requerimientos|tojson }};
-    const incidentes = {{ incidentes|tojson }};
+  {% if resultado %}
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <div class="card p-4">
+        <h4 class="mb-3 text-dark">📄 Resultado</h4>
+        <pre>{{ resultado }}</pre>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
 
-    function toggleOpciones() {
-      const tipo = document.getElementById("tipo").value;
-      const opcionSelect = document.getElementById("opcion");
-      opcionSelect.innerHTML = "";
+<script>
+  const requerimientos = {{ requerimientos|tojson }};
+  const incidentes = {{ incidentes|tojson }};
+  const selectOpcion = document.getElementById("opcion");
 
-      let opciones = [];
-      if (tipo === "Requerimiento") {
-        opciones = requerimientos;
-      } else if (tipo === "Incidente") {
-        opciones = incidentes;
-      }
-
-      if (opciones.length > 0) {
-        opciones.forEach(op => {
-          const option = document.createElement("option");
-          option.value = op;
-          option.textContent = op;
-          opcionSelect.appendChild(option);
-        });
-      } else {
-        const option = document.createElement("option");
-        option.value = "";
-        option.textContent = "-- Selecciona el tipo primero --";
-        opcionSelect.appendChild(option);
-      }
-
-      updatePreview();
+  function cargarOpciones(tipo) {
+    selectOpcion.innerHTML = ""; // limpiar
+    const opciones = tipo === "req" ? requerimientos : incidentes;
+    for (const [key, value] of Object.entries(opciones)) {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = value;
+      selectOpcion.appendChild(option);
     }
+  }
 
-    function updatePreview() {
-      const usuario = document.getElementById("usuario").value;
-      const placa = document.getElementById("placa").value;
-      const medio = document.getElementById("medio").value;
-      const tipo = document.getElementById("tipo").value;
-      const opcion = document.getElementById("opcion").value;
-      const adicional = document.getElementById("adicional").value;
-
-      const preview = `
-Tipo: ${tipo || ""}
-Medio: ${medio || ""}
-Placa Equipo: ${placa || ""}
-Usuario: ${usuario || ""}
-Causa: ${opcion || ""}
-Solución: (Se generará automáticamente)
-¿Autoriza cierre del caso?: Si
-
-${adicional ? "Nota adicional: " + adicional : ""}
-      `.trim();
-
-      document.getElementById("previewText").textContent = preview;
-    }
-  </script>
+  // Cargar por defecto al abrir (Requerimientos)
+  window.onload = () => cargarOpciones("req");
+</script>
 </body>
 </html>
