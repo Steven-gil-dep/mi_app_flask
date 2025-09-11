@@ -51,39 +51,19 @@
             text-decoration: none;
             cursor: pointer;
         }
-        .btn:hover {
-            background: #1d4ed8;
-        }
+        .btn:hover { background: #1d4ed8; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Formato Generado</h1>
 
+        {% for label, value in fields.items() %}
         <div class="field">
-            <div class="label">Tipo</div>
-            <div class="value">{{ tipo }}</div>
+            <div class="label">{{ label }}</div>
+            <div class="value">{{ value }}</div>
         </div>
-        <div class="field">
-            <div class="label">Medio</div>
-            <div class="value">{{ medio }}</div>
-        </div>
-        <div class="field">
-            <div class="label">Placa Equipo</div>
-            <div class="value">{{ placa }}</div>
-        </div>
-        <div class="field">
-            <div class="label">Causa</div>
-            <div class="value">{{ opcion }}</div>
-        </div>
-        <div class="field">
-            <div class="label">Solución</div>
-            <div class="value">{{ solucion }}</div>
-        </div>
-        <div class="field">
-            <div class="label">¿Autoriza cierre del caso?</div>
-            <div class="value">Si</div>
-        </div>
+        {% endfor %}
 
         <div class="buttons">
             <button class="btn" onclick="copyText()">📋 Copiar todo</button>
@@ -93,12 +73,14 @@
 
     <script>
         function copyText() {
-            let text = `Tipo:\n{{ tipo }}\n\nMedio:\n{{ medio }}\n\nPlaca Equipo:\n{{ placa }}\n\nCausa:\n{{ opcion }}\n\nSolución:\n{{ solucion }}\n\n¿Autoriza cierre del caso?: Si`;
-            navigator.clipboard.writeText(text).then(() => {
+            let text = "";
+            document.querySelectorAll(".value").forEach(el => {
+                text += el.innerText + "\n\n";
+            });
+            navigator.clipboard.writeText(text.trim()).then(() => {
                 alert("✅ Texto copiado al portapapeles");
             });
         }
     </script>
 </body>
 </html>
-
