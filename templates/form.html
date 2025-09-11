@@ -2,89 +2,87 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador de Formatos</title>
+    <title>Formato Generado</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .resultado { margin-top: 20px; white-space: pre-line; background: #f4f4f4; padding: 10px; border-radius: 5px; }
-        .preview { background: #eef; padding: 10px; margin-top: 10px; border: 1px solid #99c; border-radius: 5px; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9fafb;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2563eb;
+        }
+        .field {
+            margin-bottom: 20px;
+        }
+        .label {
+            font-weight: bold;
+            color: #374151;
+        }
+        .value {
+            margin-top: 5px;
+            padding: 12px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            white-space: pre-wrap; /* Mantiene saltos de línea */
+        }
+        .buttons {
+            margin-top: 25px;
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 16px;
+            background: #2563eb;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+        }
     </style>
 </head>
 <body>
-    <h2>Generador de Formatos</h2>
-    <form method="POST">
-        <label>Usuario:</label><br>
-        <input type="text" name="usuario" required><br><br>
+    <div class="container">
+        <h1>Formato Generado</h1>
 
-        <label>Placa:</label><br>
-        <input type="text" name="placa" required><br><br>
+        {% for label, value in fields.items() %}
+        <div class="field">
+            <div class="label">{{ label }}</div>
+            <div class="value" id="field-{{ loop.index }}">{{ value }}</div>
+        </div>
+        {% endfor %}
 
-        <label>Medio:</label><br>
-        <select name="medio" required>
-            <option value="1">Presencial</option>
-            <option value="2">Virtual</option>
-        </select><br><br>
-
-        <label>Tipo:</label><br>
-        <select name="tipo" id="tipo" required>
-            <option value="req">Requerimiento</option>
-            <option value="inc">Incidente</option>
-        </select><br><br>
-
-        <label>Opción:</label><br>
-        <select name="opcion" id="opcion" required></select><br><br>
-
-        <label>Solución sugerida:</label>
-        <div class="preview" id="solucionPreview">Selecciona una opción...</div>
-
-        <label>Detalles adicionales:</label><br>
-        <textarea name="detalles" rows="4" cols="50"></textarea><br><br>
-
-        <button type="submit">Generar</button>
-    </form>
-
-    {% if resultado %}
-    <div class="resultado">
-        <h3>Formato generado:</h3>
-        <pre>{{ resultado }}</pre>
+        <div class="buttons">
+            <button class="btn" onclick="copyText()">📋 Copiar todo</button>
+            <a href="/" class="btn">⬅️ Volver</a>
+        </div>
     </div>
-    {% endif %}
 
     <script>
-        const requerimientos = {{ requerimientos|tojson }};
-        const incidentes = {{ incidentes|tojson }};
-
-        const tipoSelect = document.getElementById('tipo');
-        const opcionSelect = document.getElementById('opcion');
-        const solucionPreview = document.getElementById('solucionPreview');
-
-        function actualizarOpciones() {
-            const tipo = tipoSelect.value;
-            const opciones = tipo === 'req' ? requerimientos : incidentes;
-
-            opcionSelect.innerHTML = '';
-            for (const [key, value] of Object.entries(opciones)) {
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = value[0];
-                opcionSelect.appendChild(option);
-            }
-            actualizarPreview();
+        function copyText() {
+            let text = "";
+            document.querySelectorAll(".value").forEach(el => {
+                text += el.innerText + "\n\n";
+            });
+            navigator.clipboard.writeText(text.trim()).then(() => {
+                alert("✅ Texto copiado al portapapeles");
+            });
         }
-
-        function actualizarPreview() {
-            const tipo = tipoSelect.value;
-            const opciones = tipo === 'req' ? requerimientos : incidentes;
-            const seleccion = opcionSelect.value;
-            solucionPreview.textContent = seleccion && opciones[seleccion]
-                ? opciones[seleccion][1]
-                : "Selecciona una opción...";
-        }
-
-        tipoSelect.addEventListener('change', actualizarOpciones);
-        opcionSelect.addEventListener('change', actualizarPreview);
-
-        window.onload = actualizarOpciones;
     </script>
 </body>
 </html>
-
