@@ -8,29 +8,22 @@ def index():
 
 @app.route("/generar", methods=["POST"])
 def generar():
-    # Capturar los valores del formulario
+    usuario = request.form.get("usuario")
+    placa = request.form.get("placa")
+    medio = request.form.get("medio")
     tipo = request.form.get("tipo")
-    nombre = request.form.get("nombre")
-    descripcion = request.form.get("descripcion")
+    opcion = request.form.get("opcion")
     adicional = request.form.get("adicional")
 
-    # Armar el texto de solución final
-    solucion = f"""
-Tipo de solicitud: {tipo}
-Nombre: {nombre}
-Descripción: {descripcion}
-Información adicional: {adicional if adicional else "N/A"}
-"""
+    # La solución se arma como antes
+    solucion = f"{opcion}. {adicional}" if adicional else opcion
 
-    # Pasar los datos como diccionario para la vista
-    fields = {
-        "Tipo de Solicitud": tipo,
-        "Nombre": nombre,
-        "Descripción": descripcion,
-        "Solución Generada": solucion.strip()
-    }
-
-    return render_template("result.html", fields=fields)
+    return render_template("result.html",
+                           tipo=tipo,
+                           medio=medio,
+                           placa=placa,
+                           opcion=opcion,
+                           solucion=solucion)
 
 if __name__ == "__main__":
     app.run(debug=True)
