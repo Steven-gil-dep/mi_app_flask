@@ -2,65 +2,39 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador de Formato</title>
+    <title>Generador de Formatos</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f9fafb; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #2563eb; }
-        label { font-weight: bold; display: block; margin-top: 15px; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; }
-        button { margin-top: 20px; width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; }
+        button { margin-top: 20px; width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
         button:hover { background: #1d4ed8; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Generador de Formato</h1>
-        <form method="post">
-            <label>Nombre del usuario:</label>
-            <input type="text" name="usuario" required>
-
-            <label>Placa del equipo:</label>
-            <input type="text" name="placa" required>
-
-            <label>Medio:</label>
-            <select name="medio" required>
-                <option value="Presencial">Presencial</option>
-                <option value="Virtual">Virtual</option>
+        <h1>Generar Formato</h1>
+        <form action="/generar" method="post">
+            <label for="tipo">Tipo de solicitud</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Seleccione...</option>
+                <option value="Requerimiento">Requerimiento</option>
+                <option value="Incidente">Incidente</option>
             </select>
 
-            <label>Tipo:</label>
-            <select name="tipo" id="tipo" required onchange="mostrarOpciones()">
-                <option value="">-- Seleccione --</option>
-                <option value="requerimiento">Requerimiento</option>
-                <option value="incidente">Incidente</option>
-            </select>
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" required>
 
-            <div id="opciones"></div>
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" rows="5" required></textarea>
+
+            <label for="adicional">Información adicional</label>
+            <textarea id="adicional" name="adicional" rows="4"></textarea>
 
             <button type="submit">Generar</button>
         </form>
     </div>
-
-    <script>
-        const requerimientos = {{ requerimientos|tojson }};
-        const incidentes = {{ incidentes|tojson }};
-
-        function mostrarOpciones() {
-            let tipo = document.getElementById("tipo").value;
-            let div = document.getElementById("opciones");
-            div.innerHTML = "";
-
-            if (tipo === "requerimiento") {
-                div.innerHTML = '<label>Seleccione requerimiento:</label><select name="opcion" required>' +
-                    Object.entries(requerimientos).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join("") +
-                    '</select>';
-            } else if (tipo === "incidente") {
-                div.innerHTML = '<label>Seleccione incidente:</label><select name="opcion" required>' +
-                    Object.entries(incidentes).map(([k, v]) => `<option value="${k}">${v[0]}</option>`).join("") +
-                    '</select>';
-            }
-        }
-    </script>
 </body>
 </html>
