@@ -4,51 +4,97 @@
   <meta charset="UTF-8">
   <title>Generador de Formatos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1d3557, #457b9d);
+      color: #f1faee;
+      min-height: 100vh;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .form-label {
+      font-weight: bold;
+    }
+    .btn-primary {
+      background-color: #e63946;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #d62839;
+    }
+    pre {
+      background: #f8f9fa;
+      color: #212529;
+      padding: 1rem;
+      border-radius: .5rem;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
-<body class="bg-light">
-<div class="container mt-4">
-  <h2 class="mb-3">Generador de Cierre de Casos</h2>
-  <form method="POST">
-    <div class="mb-3">
-      <label class="form-label">Usuario</label>
-      <input type="text" name="usuario" class="form-control" required>
+<body>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card p-4 bg-dark text-light">
+        <h2 class="mb-4 text-center">🛠️ Generador de Cierre de Casos</h2>
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">👤 Usuario</label>
+            <input type="text" name="usuario" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">💻 Placa</label>
+            <input type="text" name="placa" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">🌐 Medio</label>
+            <select name="medio" class="form-select" required>
+              <option value="1">Presencial</option>
+              <option value="2">Virtual</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">📌 Tipo</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="tipo" value="req" checked>
+              <label class="form-check-label">Requerimiento</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="tipo" value="inc">
+              <label class="form-check-label">Incidente</label>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">📋 Opción</label>
+            <select name="opcion" class="form-select" required>
+              {% for key, value in requerimientos.items() %}
+                <option value="{{ key }}">{{ value }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">📝 Detalles adicionales (opcional)</label>
+            <textarea name="detalles" class="form-control" rows="3"></textarea>
+          </div>
+          <button class="btn btn-primary w-100">Generar Formato</button>
+        </form>
+      </div>
     </div>
-    <div class="mb-3">
-      <label class="form-label">Placa</label>
-      <input type="text" name="placa" class="form-control" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Medio</label>
-      <select name="medio" class="form-select" required>
-        <option value="1">Presencial</option>
-        <option value="2">Virtual</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Tipo</label><br>
-      <input type="radio" name="tipo" value="req" checked> Requerimiento
-      <input type="radio" name="tipo" value="inc"> Incidente
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Opción</label>
-      <select name="opcion" class="form-select" required>
-        {% for key, value in requerimientos.items() %}
-          <option value="{{ key }}">{{ value }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Detalles adicionales (opcional)</label>
-      <textarea name="detalles" class="form-control"></textarea>
-    </div>
-    <button class="btn btn-primary">Generar</button>
-  </form>
+  </div>
 
   {% if resultado %}
-  <hr>
-  <h4>Resultado</h4>
-  <pre class="bg-white p-3 border rounded">{{ resultado }}</pre>
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <div class="card p-4">
+        <h4 class="mb-3 text-dark">📄 Resultado</h4>
+        <pre>{{ resultado }}</pre>
+      </div>
+    </div>
+  </div>
   {% endif %}
 </div>
 </body>
 </html>
+
