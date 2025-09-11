@@ -2,56 +2,62 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-# Opciones separadas por tipo
+# Opciones separadas en requerimientos e incidentes
 REQUERIMIENTOS = {
-    "1": "Actualización y configuración de Ivanty VPN",
-    "2": "Actualización Ivanty",
-    "3": "Instalación y configuración OpenVPN",
-    "4": "Permisos de administrador",
-    "5": "Permisos de admin temporal",
-    "6": "Revisión por retiro",
-    "7": "Alistamiento"
+    1: "Actualización y configuración de Ivanty VPN",
+    2: "Actualización Ivanty",
+    4: "Instalación y configuración OpenVPN",
+    16: "Permisos de administrador",
+    18: "Permisos de admin temporal",
+    19: "Revisión por retiro",
+    20: "Alistamiento"
 }
 
 INCIDENTES = {
-    "1": "Error de Slack y Teams",
-    "2": "Error de navegación Mac",
-    "3": "Archivos dañados (Sonoma 14.4)"
+    3: "Falla en VPN",
+    11: "Problemas de red",
+    12: "Error en aplicaciones críticas"
+    # agrega las demás que quieras
 }
 
 @app.route("/", methods=["GET", "POST"])
-def home():
-    resultado = ""
+def index():
+    resultado = None
+
     if request.method == "POST":
-        usuario = request.form["usuario"]
-        placa = request.form["placa"]
-        medio = "Presencial" if request.form["medio"] == "1" else "Virtual"
-        tipo = "Requerimiento" if request.form["tipo"] == "req" else "Incidente"
-        opcion = request.form["opcion"]
+        usuario = request.form.get("usuario")
+        placa = request.form.get("placa")
+        medio = request.form.get("medio")
+        tipo = request.form.get("tipo")  # 'req' o 'inc'
+        opcion = int(request.form.get("opcion"))
         detalles = request.form.get("detalles", "")
 
-        # Buscar el texto según el tipo
-        if tipo == "Requerimiento":
-            causa = REQUERIMIENTOS[opcion]
+        # Medio traducido
+        medio_txt = "Presencial" if medio == "1" else "Virtual"
+
+        # Buscar la opción según el tipo
+        if tipo == "req":
+            causa = REQUERIMIENTOS.get(opcion, "No especificado")
+            tipo_txt = "Requerimiento"
         else:
-            causa = INCIDENTES[opcion]
+            causa = INCIDENTES.get(opcion, "No especificado")
+            tipo_txt = "Incidente"
 
-        # Armar el formato final
-        resultado = (
-            f"Tipo: {tipo}\n"
-            f"Medio: {medio}\n"
-            f"Placa Equipo: {placa}\n"
-            f"Causa: {causa}\n"
-            f"Solución: {detalles if detalles else '---'}\n"
-            "¿Autoriza cierre del caso?: Si"
-        )
+        # Resultado final
+        resultado = f"""Tipo: {tipo_txt}
+Medio: {medio_txt}
+Placa Equipo: {placa}
+Causa: {causa}
+Solución: {detalles if detalles else 'N/A'}
+¿Autoriza cierre del caso?: Si"""
 
-    return render_template("form.html",
-                           requerimientos=REQUERIMIENTOS,
-                           incidentes=INCIDENTES,
-                           resultado=resultado)
+    # Siempre enviar requerimientos e incidentes al template
+    return render_template(
+        "form.html",
+        resultado=resultado,
+        requerimientos=REQUERIMIENTOS,
+        incidentes=INCIDENTES
+    )
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
-
+    app.run(debug=True)
