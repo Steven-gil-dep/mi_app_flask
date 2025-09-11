@@ -2,30 +2,35 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
-    if request.method == "POST":
-        tipo = request.form["tipo"]
-        descripcion = request.form["descripcion"]
-        adicional = request.form["solucion"]
+    return render_template("form.html")
 
-        # Armamos el texto completo como antes (en Solución)
-        solucion = f"""Se recibe {tipo.lower()} con la siguiente descripción:
-{descripcion}
+@app.route("/generar", methods=["POST"])
+def generar():
+    # Capturar los valores del formulario
+    tipo = request.form.get("tipo")
+    nombre = request.form.get("nombre")
+    descripcion = request.form.get("descripcion")
+    adicional = request.form.get("adicional")
 
-Acciones realizadas:
-{adicional}
+    # Armar el texto de solución final
+    solucion = f"""
+Tipo de solicitud: {tipo}
+Nombre: {nombre}
+Descripción: {descripcion}
+Información adicional: {adicional if adicional else "N/A"}
 """
 
-        fields = {
-            "Tipo": tipo,
-            "Descripción": descripcion,
-            "Solución": solucion.strip()
-        }
+    # Pasar los datos como diccionario para la vista
+    fields = {
+        "Tipo de Solicitud": tipo,
+        "Nombre": nombre,
+        "Descripción": descripcion,
+        "Solución Generada": solucion.strip()
+    }
 
-        return render_template("result.html", fields=fields)
-
-    return render_template("form.html")
+    return render_template("result.html", fields=fields)
 
 if __name__ == "__main__":
     app.run(debug=True)
