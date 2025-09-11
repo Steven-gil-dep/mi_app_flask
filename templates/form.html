@@ -1,123 +1,173 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Generador de Formato</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f4f8;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #2563eb;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 15px;
-            color: #374151;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        textarea { resize: vertical; }
-        button {
-            margin-top: 20px;
-            padding: 12px;
-            width: 100%;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover { background: #1d4ed8; }
-
-        /* Vista previa */
-        .preview {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-        }
-        .preview h2 {
-            margin-bottom: 15px;
-            color: #111827;
-        }
-        .preview-content {
-            white-space: pre-wrap;
-            font-family: monospace;
-            background: #f3f4f6;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Generador de Formatos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2563eb;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #374151;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #f9fafb;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    .preview {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      background: #f9fafb;
+    }
+    .preview h2 {
+      margin-top: 0;
+      color: #111827;
+    }
+    .preview pre {
+      white-space: pre-wrap;
+      font-family: inherit;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Generador de Formato</h1>
-        <form method="POST">
-            <label for="tipo">Tipo de Solicitud:</label>
-            <select id="tipo" name="tipo" required>
-                <option value="">-- Seleccione --</option>
-                <option value="Requerimiento">Requerimiento</option>
-                <option value="Incidente">Incidente</option>
-            </select>
+  <div class="container">
+    <h1>Generador de Formatos</h1>
+    <form method="POST">
+      <label for="usuario">Nombre del usuario:</label>
+      <input type="text" id="usuario" name="usuario" required oninput="updatePreview()">
 
-            <label for="nombre">Nombre del Solicitante:</label>
-            <input type="text" id="nombre" name="nombre" required>
+      <label for="placa">Placa del equipo:</label>
+      <input type="text" id="placa" name="placa" required oninput="updatePreview()">
 
-            <label for="descripcion">Descripción:</label>
-            <textarea id="descripcion" name="descripcion" required></textarea>
+      <label for="medio">Medio:</label>
+      <select id="medio" name="medio" required onchange="updatePreview()">
+        <option value="">-- Selecciona --</option>
+        <option value="Presencial">Presencial</option>
+        <option value="Virtual">Virtual</option>
+      </select>
 
-            <label for="adicional">Información Adicional:</label>
-            <textarea id="adicional" name="adicional"></textarea>
+      <label for="tipo">Tipo de solicitud:</label>
+      <select id="tipo" name="tipo" required onchange="toggleOpciones(); updatePreview();">
+        <option value="">-- Selecciona --</option>
+        <option value="Requerimiento">Requerimiento</option>
+        <option value="Incidente">Incidente</option>
+      </select>
 
-            <button type="submit">Generar Formato</button>
-        </form>
+      <label for="opcion">Causa:</label>
+      <select id="opcion" name="opcion" required onchange="updatePreview()">
+        <option value="">-- Selecciona el tipo primero --</option>
+      </select>
 
-        <div class="preview">
-            <h2>Vista Previa</h2>
-            <div id="preview-content" class="preview-content">
-                Complete los campos para ver la vista previa...
-            </div>
-        </div>
+      <label for="adicional">Información adicional (opcional):</label>
+      <textarea id="adicional" name="adicional" oninput="updatePreview()"></textarea>
+
+      <button type="submit">Generar Formato</button>
+    </form>
+
+    <div class="preview">
+      <h2>Vista previa:</h2>
+      <pre id="previewText">Completa los campos para ver la vista previa aquí...</pre>
     </div>
+  </div>
 
-    <script>
-        const tipo = document.getElementById("tipo");
-        const nombre = document.getElementById("nombre");
-        const descripcion = document.getElementById("descripcion");
-        const adicional = document.getElementById("adicional");
-        const preview = document.getElementById("preview-content");
+  <script>
+    const requerimientos = {{ requerimientos|tojson }};
+    const incidentes = {{ incidentes|tojson }};
 
-        function actualizarPreview() {
-            let texto = `📌 Tipo: ${tipo.value || "(sin especificar)"}\n👤 Nombre: ${nombre.value || "(sin nombre)"}\n📝 Descripción:\n${descripcion.value || "(sin descripción)"}\n\n📎 Información adicional:\n${adicional.value || "(ninguna)"}`;
-            preview.textContent = texto;
-        }
+    function toggleOpciones() {
+      const tipo = document.getElementById("tipo").value;
+      const opcionSelect = document.getElementById("opcion");
+      opcionSelect.innerHTML = "";
 
-        [tipo, nombre, descripcion, adicional].forEach(el => {
-            el.addEventListener("input", actualizarPreview);
+      let opciones = [];
+      if (tipo === "Requerimiento") {
+        opciones = requerimientos;
+      } else if (tipo === "Incidente") {
+        opciones = incidentes;
+      }
+
+      if (opciones.length > 0) {
+        opciones.forEach(op => {
+          const option = document.createElement("option");
+          option.value = op;
+          option.textContent = op;
+          opcionSelect.appendChild(option);
         });
-    </script>
+      } else {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "-- Selecciona el tipo primero --";
+        opcionSelect.appendChild(option);
+      }
+
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const usuario = document.getElementById("usuario").value;
+      const placa = document.getElementById("placa").value;
+      const medio = document.getElementById("medio").value;
+      const tipo = document.getElementById("tipo").value;
+      const opcion = document.getElementById("opcion").value;
+      const adicional = document.getElementById("adicional").value;
+
+      const preview = `
+Tipo: ${tipo || ""}
+Medio: ${medio || ""}
+Placa Equipo: ${placa || ""}
+Usuario: ${usuario || ""}
+Causa: ${opcion || ""}
+Solución: (Se generará automáticamente)
+¿Autoriza cierre del caso?: Si
+
+${adicional ? "Nota adicional: " + adicional : ""}
+      `.trim();
+
+      document.getElementById("previewText").textContent = preview;
+    }
+  </script>
 </body>
 </html>
