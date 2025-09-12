@@ -58,20 +58,18 @@
           <div class="mb-3">
             <label class="form-label">📌 Tipo</label><br>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="tipo" value="req" checked>
+              <input class="form-check-input" type="radio" name="tipo" value="req" checked onclick="cargarOpciones('req')">
               <label class="form-check-label">Requerimiento</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="tipo" value="inc">
+              <input class="form-check-input" type="radio" name="tipo" value="inc" onclick="cargarOpciones('inc')">
               <label class="form-check-label">Incidente</label>
             </div>
           </div>
           <div class="mb-3">
             <label class="form-label">📋 Opción</label>
-            <select name="opcion" class="form-select" required>
-              {% for key, value in requerimientos.items() %}
-                <option value="{{ key }}">{{ value }}</option>
-              {% endfor %}
+            <select name="opcion" id="opcion" class="form-select" required>
+              <!-- Se llenará dinámicamente -->
             </select>
           </div>
           <div class="mb-3">
@@ -95,5 +93,25 @@
   </div>
   {% endif %}
 </div>
+
+<script>
+  const requerimientos = {{ requerimientos|tojson }};
+  const incidentes = {{ incidentes|tojson }};
+  const selectOpcion = document.getElementById("opcion");
+
+  function cargarOpciones(tipo) {
+    selectOpcion.innerHTML = ""; // limpiar
+    const opciones = tipo === "req" ? requerimientos : incidentes;
+    for (const [key, value] of Object.entries(opciones)) {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = value;
+      selectOpcion.appendChild(option);
+    }
+  }
+
+  // Cargar por defecto al abrir (Requerimientos)
+  window.onload = () => cargarOpciones("req");
+</script>
 </body>
 </html>
