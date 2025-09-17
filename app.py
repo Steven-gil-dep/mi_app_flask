@@ -4,20 +4,20 @@ app = Flask(__name__)
 
 # Opciones con su "causa" y una "solución predefinida"
 REQUERIMIENTOS = {
-    1: ("Actualización y configuración de Ivanty VPN",
-        "Se realizó la actualización y configuración de Ivanty VPN de manera satisfactoria."),
-    2: ("Actualización Ivanty",
-        "Se ejecutó la actualización de Ivanty correctamente."),
-    4: ("Instalación y configuración OpenVPN",
-        "Se instaló y configuró OpenVPN garantizando la conectividad."),
+    1: ("Instalacion y configuracion de OpenVPN",
+        "Se realizó la Instalacion y configuración del aplicativo OpenVPNConnect de manera satisfactoria, se instalan los certificados actuales y el perfil de navegacion requerido verificando la correcta conexion y accesos"),
+    2: ("instalacion de Sw(Individual)",
+        "Se instala el aplicativo a satisfaccion de manera correcta."),
+    4: ("Instalación de Sw(Varios)",
+        "Se realiza la instalacion de los aplicativos requeridos a satisfaccion de manera correcta."),
     16: ("Permisos de administrador",
-        "Se otorgaron permisos de administrador según la solicitud."),
-    18: ("Permisos de admin temporal",
+        "Se otorgaron permisos de administrador temporal comoros según la solicitud, y se le dan indicaciones al usuario"),
+    18: ("",
         "Se concedieron permisos de administrador temporales."),
     19: ("Revisión por retiro",
         "Se realizó la revisión del equipo por motivo de retiro."),
     20: ("Alistamiento",
-        "Se realizó el alistamiento completo del equipo.")
+        "Se realizó el alistamiento completo del equipo con cargador, se adjuntos datos de la maquina y fotos.")
 }
 
 INCIDENTES = {
@@ -74,3 +74,4 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
