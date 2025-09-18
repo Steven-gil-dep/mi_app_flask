@@ -46,6 +46,7 @@ def index():
         tipo = request.form.get("tipo")  # 'req' o 'inc'
         opcion = int(request.form.get("opcion"))
         detalles = request.form.get("detalles", "").strip()
+        datos_de_equipo = request.form.get("datos del equipo", "").strip()
 
         # Medio traducido
         medio_txt = "Presencial" if medio == "1" else "Virtual"
@@ -61,6 +62,11 @@ def index():
         # Agregar detalles si los hay
         if detalles:
             solucion = f"{solucion} Detalles adicionales: {detalles}"
+        if datos_de_equipo:
+            solucion = f"{solucion} {datos_de_equipo}:
+            Placa: {placa}
+            Serial: 
+            Modelo: "
 
         # Resultado final
         resultado = f"""Tipo: {tipo_txt}
@@ -79,6 +85,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
