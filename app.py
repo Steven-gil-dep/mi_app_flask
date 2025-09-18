@@ -8,26 +8,30 @@ REQUERIMIENTOS = {
         "Se realizó la Instalacion y configuración del aplicativo OpenVPNConnect de manera satisfactoria, se instalan los certificados actuales y el perfil de navegacion requerido verificando la correcta conexion y accesos"),
     2: ("instalacion de Sw(Individual)",
         "Se instala el aplicativo a satisfaccion de manera correcta."),
-    4: ("Instalación de Sw(Varios)",
+    3: ("Instalación de Sw(Varios)",
         "Se realiza la instalacion de los aplicativos requeridos a satisfaccion de manera correcta."),
-    16: ("Permisos de administrador",
+    4: ("Permisos de administrador",
         "Se otorgaron permisos de administrador temporal comoros según la solicitud, y se le dan indicaciones al usuario"),
-    18: ("Revicion por cambio de equipo",
+    5: ("Revicion por cambio de equipo",
         "Se realiza la revicion del equipo de computo, realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker."),
-    19: ("Revisión por retiro",
+    6: ("Revisión por retiro",
         "Se realizó la revisión del equipo por motivo de retiro. realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker, sin evidenciar anomalìas en su funcionamiento durante las pruebas realizadas, se realiza borrado seguro y eliminacion del equipo de Dominio"),
-    20: ("Alistamiento",
+    7: ("Alistamiento",
         "Se realizó el alistamiento completo del equipo con cargador en buen etsado fisico y funcionales, se adjuntos datos de la maquina y fotos.")
 }
 
 INCIDENTES = {
-    3: ("Falla en VPN",
+    1: ("Falla en VPN",
         "Se diagnosticó y corrigió la falla en el servicio VPN."),
-    11: ("Problemas de red",
+    2: ("Problemas de red",
         "Se revisó la conectividad de red y se solucionaron los inconvenientes."),
-    12: ("Error en aplicaciones críticas",
+    3: ("Error en aplicaciones críticas",
         "Se identificó y resolvió el error en la aplicación crítica reportada.")
-    # Puedes seguir agregando más
+    4: ("Reinstalacion de OS",
+        "Se reinstala el sistema operativo, se instalan los aplicativos basicos y se verifica que los agentes de seguridad queden reportanto en su totalidad.")
+    5: ("Error de inicio al OS (Para Wn)",
+        "Se inicia sesion desde el usuario administrador Local y se realiza comunicacion con el servidor del dominio por medio de la red, luego de esto se inicia sesion correctamente.")
+    # Para seguir agregando más
 }
 
 @app.route("/", methods=["GET", "POST"])
@@ -73,5 +77,6 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
