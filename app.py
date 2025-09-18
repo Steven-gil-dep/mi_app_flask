@@ -26,11 +26,11 @@ INCIDENTES = {
     2: ("Problemas de red",
         "Se revisó la conectividad de red y se solucionaron los inconvenientes."),
     3: ("Error en aplicaciones críticas",
-        "Se identificó y resolvió el error en la aplicación crítica reportada.")
+        "Se identificó y resolvió el error en la aplicación crítica reportada."),
     4: ("Reinstalacion de OS",
-        "Se reinstala el sistema operativo, se instalan los aplicativos basicos y se verifica que los agentes de seguridad queden reportanto en su totalidad.")
+        "Se reinstala el sistema operativo, se instalan los aplicativos basicos y se verifica que los agentes de seguridad queden reportanto en su totalidad."),
     5: ("Error de inicio al OS (Para Wn)",
-        "Se inicia sesion desde el usuario administrador Local y se realiza comunicacion con el servidor del dominio por medio de la red, luego de esto se inicia sesion correctamente.")
+        "Se inicia sesion desde el usuario administrador Local y se realiza comunicacion con el servidor del dominio por medio de la red, luego de esto se inicia sesion correctamente."),
     # Para seguir agregando más
 }
 
@@ -77,6 +77,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
