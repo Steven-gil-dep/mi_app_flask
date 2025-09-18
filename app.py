@@ -17,7 +17,7 @@ REQUERIMIENTOS = {
     6: ("Revisión por retiro",
         "Se realizó la revisión del equipo por motivo de retiro. realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker, sin evidenciar anomalìas en su funcionamiento durante las pruebas realizadas, se realiza borrado seguro y eliminacion del equipo de Dominio"),
     7: ("Alistamiento",
-        "Se realizó el alistamiento completo del equipo con cargador en buen etsado fisico y funcionales, se adjuntos datos de la maquina y fotos.")
+        "Se realizó el alistamiento completo del equipo con cargador en buen etsado fisico y funcionales, se adjuntos datos de la maquina y fotos."),
 }
 
 INCIDENTES = {
@@ -77,6 +77,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
