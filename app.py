@@ -31,6 +31,8 @@ INCIDENTES = {
         "Se reinstala el sistema operativo, se instalan los aplicativos basicos y se verifica que los agentes de seguridad queden reportanto en su totalidad."),
     5: ("Error de inicio al OS (Para Wn)",
         "Se inicia sesion desde el usuario administrador Local y se realiza comunicacion con el servidor del dominio por medio de la red, luego de esto se inicia sesion correctamente."),
+    6: ("Restablecimiento Contraseña AWS",
+        "Se cierra solicitud debido a que el área de soporte TI no cuenta con alcance ni administración de los accesos a AWS, por favor generar solicitud por medio del canal de Slack #devops-faqs por tablero en Jira: https://avaldigitallabs.atlassian.net/jira/software/c/projects/OPS/boards/109."),
     # Para seguir agregando más
 }
 
@@ -77,6 +79,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
