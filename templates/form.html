@@ -64,16 +64,28 @@
           </div>
           <div class="mb-3">
             <label class="form-label">📋 Opción</label>
-            <select name="opcion" id="opcion" class="form-select" required>
+            <select name="opcion" id="opcion" class="form-select" onchange="toggleDatosEquipo()" required>
               <!-- Se llenará dinámicamente -->
             </select>
           </div>
-          <div class="mb-3">
-            <label class="form-label">📋 datos_de_equipo(Para Alistamientos)</label>
-            <select name="datos_de_equipo" id="datos_de_equipo" class="form-select" required>
-              <!-- Se llenará dinámicamente -->
-            </select>
+
+          <!-- Campos de datos del equipo (ocultos por defecto) -->
+          <div id="datos-equipo" style="display:none;">
+            <h5 class="text-info mt-3">📌 Datos del Equipo</h5>
+            <div class="mb-3">
+              <label class="form-label">🔢 Serial</label>
+              <input type="text" name="serial" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">💻 Modelo</label>
+              <input type="text" name="modelo" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">🏷️ Placa</label>
+              <input type="text" name="placa" class="form-control">
+            </div>
           </div>
+
           <div class="mb-3">
             <label class="form-label">📝 Detalles adicionales (opcional)</label>
             <textarea name="detalles" class="form-control" rows="3"></textarea>
@@ -100,6 +112,7 @@
   const requerimientos = {{ requerimientos|tojson }};
   const incidentes = {{ incidentes|tojson }};
   const selectOpcion = document.getElementById("opcion");
+  const datosEquipoDiv = document.getElementById("datos-equipo");
 
   function cargarOpciones(tipo) {
     selectOpcion.innerHTML = ""; // limpiar
@@ -109,6 +122,19 @@
       option.value = key;
       option.textContent = value;
       selectOpcion.appendChild(option);
+    }
+    toggleDatosEquipo(); // verificar si hay que mostrar datos de equipo
+  }
+
+  function toggleDatosEquipo() {
+    const tipo = document.querySelector('input[name="tipo"]:checked')?.value;
+    const opcion = parseInt(selectOpcion.value);
+
+    // Mostrar solo si es Alistamiento (req=7) o Reinstalación de OS (inc=4)
+    if ((tipo === "req" && opcion === 7) || (tipo === "inc" && opcion === 4)) {
+      datosEquipoDiv.style.display = "block";
+    } else {
+      datosEquipoDiv.style.display = "none";
     }
   }
 
