@@ -48,6 +48,10 @@ def index():
         opcion = int(request.form.get("opcion"))
         detalles = request.form.get("detalles", "").strip()
         datos_de_equipo = request.form.get("datos del equipo")
+        if datos_de_equipo:
+            serial = request.form.get("serial")
+            placa = request.form.get("placa")
+            modelo = request.form.get("modelo")
 
         # Medio traducido
         medio_txt = "Presencial" if medio == "1" else "Virtual"
@@ -83,6 +87,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
