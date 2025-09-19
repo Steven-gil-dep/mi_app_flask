@@ -44,6 +44,7 @@ def index():
         placa = request.form.get("placa")
         medio = request.form.get("medio")
         tipo = request.form.get("tipo")  # 'req' o 'inc'
+        modelo = request.form.get("modelo")
         opcion = int(request.form.get("opcion"))
         detalles = request.form.get("detalles", "").strip()
         #datos_de_equipo = request.form.get("datos del equipo", "").strip()
@@ -85,6 +86,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
