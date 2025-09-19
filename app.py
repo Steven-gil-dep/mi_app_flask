@@ -60,6 +60,7 @@ def index():
 
         # Medio traducido
         medio_txt = "Presencial" if medio == "1" else "Virtual"
+        DATOS_DE_EQUIPO = "Placa" if datos_de_equipo == "1" else "Modelo"
 
         # Buscar la opción según el tipo
         if tipo == "req":
@@ -94,6 +95,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
