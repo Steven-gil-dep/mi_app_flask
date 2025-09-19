@@ -63,7 +63,7 @@ def index():
         if detalles:
             solucion = f"{solucion} Detalles adicionales: {detalles}"
         elif datos_de_equipo:
-            solucion = f"{solucion} {datos_de_equipo}:
+            solucion = f"{solucion}: {datos_de_equipo}:
             Placa: {placa}
             Serial: 
             Modelo: "
@@ -85,6 +85,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
