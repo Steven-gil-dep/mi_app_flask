@@ -67,7 +67,7 @@ def index():
             solucion = f"{solucion}: {datos_de_equipo}:
             Placa: {placa}
             Serial: 
-            Modelo: "
+            modelo: "
 
         # Resultado final
         resultado = f"""Tipo: {tipo_txt}
@@ -86,6 +86,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
