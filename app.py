@@ -35,6 +35,11 @@ INCIDENTES = {
         "Se cierra solicitud debido a que el área de soporte TI no cuenta con alcance ni administración de los accesos a AWS, por favor generar solicitud por medio del canal de Slack #devops-faqs por tablero en Jira: https://avaldigitallabs.atlassian.net/jira/software/c/projects/OPS/boards/109."),
     # Para seguir agregando más
 }
+DATOS_DE_EQUIPO = {
+    1: ("SERIAL: ",
+    2: ("MODELO: ")
+    3: ("PLACA: ")
+}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -87,6 +92,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
