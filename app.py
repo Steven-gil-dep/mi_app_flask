@@ -64,10 +64,7 @@ def index():
         if detalles:
             solucion = f"{solucion} Detalles adicionales: {detalles}"
         elif datos_de_equipo:
-            solucion = f"{solucion}: {datos_de_equipo}:
-            Placa: {placa}
-            Serial: 
-            modelo: "
+            solucion = f"{solucion}: {datos_de_equipo}:\nPlaca: {placa}\Serial:\n modelo: "
 
         # Resultado final
         resultado = f"""Tipo: {tipo_txt}
@@ -86,6 +83,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
