@@ -36,9 +36,9 @@ INCIDENTES = {
     # Para seguir agregando más
 }
 DATOS_DE_EQUIPO = {
-    1: ("SERIAL: ",
-    2: ("MODELO: ")
-    3: ("PLACA: ")
+    1: ("SERIAL: "),
+    2: ("MODELO: "),
+    3: ("PLACA: "),
 }
 
 @app.route("/", methods=["GET", "POST"])
@@ -92,6 +92,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
