@@ -65,6 +65,8 @@ def index():
         if tipo == "req":
             causa, solucion = REQUERIMIENTOS.get(opcion, ("No especificado", ""))
             tipo_txt = "Requerimiento"
+        elif datos_de_equipo == "datos_de_equipo":
+            DATOS_DE_EQUIPO = DATOS_DE_EQUIPO.get(serial, placa, modelo("No especificado", ""))
         else:
             causa, solucion = INCIDENTES.get(opcion, ("No especificado", ""))
             tipo_txt = "Incidente"
@@ -92,6 +94,7 @@ Solución: {solucion}
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
