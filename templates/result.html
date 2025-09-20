@@ -61,6 +61,17 @@
 
     <div class="buttons">
       <button class="btn" onclick="copyText()">📋 Copiar</button>
+
+      <form action="/download_txt" method="POST" style="display:inline;">
+        <input type="hidden" name="output_text" value="{{ output_text }}">
+        <button type="submit" class="btn">📄 Descargar TXT</button>
+      </form>
+
+      <form action="/download_excel" method="POST" style="display:inline;">
+        <input type="hidden" name="output_text" value="{{ output_text }}">
+        <button type="submit" class="btn">📊 Descargar Excel</button>
+      </form>
+
       <a href="/" class="btn">⬅️ Volver</a>
     </div>
   </div>
