@@ -64,25 +64,17 @@
           </div>
           <div class="mb-3">
             <label class="form-label">📋 Opción</label>
-            <select name="opcion" id="opcion" class="form-select" onchange="toggleDatosEquipo()" required>
-              <!-- Se llenará dinámicamente -->
-            </select>
+            <select name="opcion" id="opcion" class="form-select" required></select>
           </div>
 
-          <!-- Campos de datos del equipo (ocultos por defecto) -->
-          <div id="datos-equipo" style="display:none;">
-            <h5 class="text-info mt-3">📌 Datos del Equipo</h5>
-            <div class="mb-3">
-              <label class="form-label">🔢 Serial</label>
-              <input type="text" name="serial" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">💻 Modelo</label>
-              <input type="text" name="modelo" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">🏷️ Placa</label>
-              <input type="text" name="placa" class="form-control">
+          <!-- Campos ocultos dinámicos -->
+          <div id="datosEquipoFields" class="mb-3" style="display:none;">
+            <label class="form-label">🔧 Datos del Equipo</label>
+            <input type="text" name="serial" id="serial" class="form-control mb-2" placeholder="Serial">
+            <input type="text" name="modelo" id="modelo" class="form-control mb-2" placeholder="Modelo">
+            <input type="text" name="placa_equipo" id="placa_equipo" class="form-control mb-2" placeholder="Placa">
+            <div class="alert alert-info mt-2" id="avisoCampos">
+              ⚠️ Obligatorio solo para <b>Alistamiento</b> o <b>Reinstalación de OS</b>.
             </div>
           </div>
 
@@ -112,10 +104,10 @@
   const requerimientos = {{ requerimientos|tojson }};
   const incidentes = {{ incidentes|tojson }};
   const selectOpcion = document.getElementById("opcion");
-  const datosEquipoDiv = document.getElementById("datos-equipo");
+  const datosEquipoDiv = document.getElementById("datosEquipoFields");
 
   function cargarOpciones(tipo) {
-    selectOpcion.innerHTML = ""; // limpiar
+    selectOpcion.innerHTML = "";
     const opciones = tipo === "req" ? requerimientos : incidentes;
     for (const [key, value] of Object.entries(opciones)) {
       const option = document.createElement("option");
@@ -123,22 +115,19 @@
       option.textContent = value;
       selectOpcion.appendChild(option);
     }
-    toggleDatosEquipo(); // verificar si hay que mostrar datos de equipo
+    selectOpcion.dispatchEvent(new Event("change")); // refrescar
   }
 
-  function toggleDatosEquipo() {
-    const tipo = document.querySelector('input[name="tipo"]:checked')?.value;
-    const opcion = parseInt(selectOpcion.value);
-
-    // Mostrar solo si es Alistamiento (req=7) o Reinstalación de OS (inc=4)
-    if ((tipo === "req" && opcion === 7) || (tipo === "inc" && opcion === 4)) {
+  // Mostrar/ocultar campos dinámicamente
+  selectOpcion.addEventListener("change", () => {
+    const opcionSeleccionada = selectOpcion.options[selectOpcion.selectedIndex].text;
+    if (opcionSeleccionada.includes("Alistamiento") || opcionSeleccionada.includes("Reinstalacion de OS")) {
       datosEquipoDiv.style.display = "block";
     } else {
       datosEquipoDiv.style.display = "none";
     }
-  }
+  });
 
-  // Cargar por defecto al abrir (Requerimientos)
   window.onload = () => cargarOpciones("req");
 </script>
 </body>
