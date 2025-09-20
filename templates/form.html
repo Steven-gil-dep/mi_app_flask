@@ -24,6 +24,13 @@
     .btn-primary:hover {
       background-color: #d62839;
     }
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
     pre {
       background: #f8f9fa;
       color: #212529;
@@ -39,18 +46,27 @@
     <div class="col-md-8">
       <div class="card p-4 bg-dark text-light">
         <h2 class="mb-4 text-center">🛠️ Generador de Cierre de Casos</h2>
-        <form method="POST">
+        <form method="POST" id="case-form">
+          <!-- Placa -->
           <div class="mb-3">
             <label class="form-label">💻 Placa</label>
-            <input type="text" name="placa" class="form-control" required>
+            <input type="text" name="placa" id="placa" class="form-control" 
+                   required pattern="[A-Za-z0-9-]+" 
+                   placeholder="Ejemplo: ABC123"
+                   oninput="validarPlaca()">
+            <div class="invalid-feedback">La placa solo puede contener letras, números y guiones.</div>
           </div>
+
+          <!-- Medio -->
           <div class="mb-3">
             <label class="form-label">🌐 Medio</label>
             <select name="medio" class="form-select" required>
-              <option value="1">Presencial</option>
+              <option value="1" selected>Presencial</option>
               <option value="2">Virtual</option>
             </select>
           </div>
+
+          <!-- Tipo -->
           <div class="mb-3">
             <label class="form-label">📌 Tipo</label><br>
             <div class="form-check form-check-inline">
@@ -62,27 +78,40 @@
               <label class="form-check-label">Incidente</label>
             </div>
           </div>
+
+          <!-- Opciones dinámicas -->
           <div class="mb-3">
             <label class="form-label">📋 Opción</label>
-            <select name="opcion" id="opcion" class="form-select" required></select>
+            <select name="opcion" id="opcion" class="form-select" required>
+              <!-- Se llenará dinámicamente -->
+            </select>
           </div>
 
-          <!-- Campos ocultos dinámicos -->
-          <div id="datosEquipoFields" class="mb-3" style="display:none;">
-            <label class="form-label">🔧 Datos del Equipo</label>
-            <input type="text" name="serial" id="serial" class="form-control mb-2" placeholder="Serial">
-            <input type="text" name="modelo" id="modelo" class="form-control mb-2" placeholder="Modelo">
-            <input type="text" name="placa_equipo" id="placa_equipo" class="form-control mb-2" placeholder="Placa">
-            <div class="alert alert-info mt-2" id="avisoCampos">
-              ⚠️ Obligatorio solo para <b>Alistamiento</b> o <b>Reinstalación de OS</b>.
+          <!-- Datos de equipo (oculto por defecto) -->
+          <div id="datos-equipo-section" style="display:none;">
+            <div class="mb-3">
+              <label class="form-label">🔑 Serial</label>
+              <input type="text" name="serial" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">💻 Modelo</label>
+              <input type="text" name="modelo" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">📌 Placa</label>
+              <input type="text" name="placa_equipo" class="form-control">
             </div>
           </div>
 
+          <!-- Detalles -->
           <div class="mb-3">
             <label class="form-label">📝 Detalles adicionales (opcional)</label>
             <textarea name="detalles" class="form-control" rows="3"></textarea>
           </div>
+
+          <!-- Botones -->
           <button class="btn btn-primary w-100">Generar Formato</button>
+          <button type="reset" class="btn btn-secondary w-100 mt-2">Limpiar Formulario</button>
         </form>
       </div>
     </div>
@@ -104,8 +133,10 @@
   const requerimientos = {{ requerimientos|tojson }};
   const incidentes = {{ incidentes|tojson }};
   const selectOpcion = document.getElementById("opcion");
-  const datosEquipoDiv = document.getElementById("datosEquipoFields");
+  const datosEquipoSection = document.getElementById("datos-equipo-section");
+  const form = document.getElementById("case-form");
 
+  // Cargar opciones dinámicas
   function cargarOpciones(tipo) {
     selectOpcion.innerHTML = "";
     const opciones = tipo === "req" ? requerimientos : incidentes;
@@ -115,20 +146,50 @@
       option.textContent = value;
       selectOpcion.appendChild(option);
     }
-    selectOpcion.dispatchEvent(new Event("change")); // refrescar
+    mostrarDatosEquipo();
   }
 
-  // Mostrar/ocultar campos dinámicamente
-  selectOpcion.addEventListener("change", () => {
-    const opcionSeleccionada = selectOpcion.options[selectOpcion.selectedIndex].text;
-    if (opcionSeleccionada.includes("Alistamiento") || opcionSeleccionada.includes("Reinstalacion de OS")) {
-      datosEquipoDiv.style.display = "block";
+  // Validación de placa
+  function validarPlaca() {
+    const placa = document.getElementById("placa");
+    if (!placa.checkValidity()) {
+      placa.classList.add("is-invalid");
     } else {
-      datosEquipoDiv.style.display = "none";
+      placa.classList.remove("is-invalid");
     }
+  }
+
+  // Mostrar u ocultar datos del equipo según opción
+  function mostrarDatosEquipo() {
+    const opcionSeleccionada = selectOpcion.options[selectOpcion.selectedIndex]?.textContent || "";
+    if (opcionSeleccionada.includes("Alistamiento") || opcionSeleccionada.includes("Reinstalacion")) {
+      datosEquipoSection.style.display = "block";
+    } else {
+      datosEquipoSection.style.display = "none";
+    }
+  }
+
+  // Escuchar cambios en el selector de opciones
+  selectOpcion.addEventListener("change", mostrarDatosEquipo);
+
+  // Guardar datos en localStorage
+  form.addEventListener("input", () => {
+    localStorage.setItem("formData", JSON.stringify(Object.fromEntries(new FormData(form))));
   });
 
-  window.onload = () => cargarOpciones("req");
+  // Recuperar datos al cargar
+  window.onload = () => {
+    cargarOpciones("req");
+    const saved = localStorage.getItem("formData");
+    if (saved) {
+      const data = JSON.parse(saved);
+      for (const [key, value] of Object.entries(data)) {
+        const field = form.elements[key];
+        if (field) field.value = value;
+      }
+    }
+    mostrarDatosEquipo();
+  };
 </script>
 </body>
 </html>
