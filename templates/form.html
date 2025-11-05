@@ -39,25 +39,18 @@
     <div class="col-md-8">
       <div class="card p-4 bg-dark text-light">
         <h2 class="mb-4 text-center">🛠️ Generador de Cierre de Casos</h2>
-
-        <!-- FORMULARIO PRINCIPAL -->
         <form method="POST">
-          <!-- Placa -->
           <div class="mb-3">
             <label class="form-label">💻 Placa</label>
             <input type="text" name="placa" class="form-control" required>
           </div>
-
-          <!-- Medio -->
           <div class="mb-3">
             <label class="form-label">🌐 Medio</label>
             <select name="medio" class="form-select" required>
-              <option value="Presencial">Presencial</option>
-              <option value="Virtual">Virtual</option>
+              <option value="1">Presencial</option>
+              <option value="2">Virtual</option>
             </select>
           </div>
-
-          <!-- Tipo -->
           <div class="mb-3">
             <label class="form-label">📌 Tipo</label><br>
             <div class="form-check form-check-inline">
@@ -69,75 +62,72 @@
               <label class="form-check-label">Incidente</label>
             </div>
           </div>
-
-          <!-- Opciones dinámicas -->
           <div class="mb-3">
             <label class="form-label">📋 Opción</label>
-            <select name="opcion" id="opcion" class="form-select" required>
-              <!-- Se llenará dinámicamente -->
-            </select>
+            <select name="opcion" id="opcion" class="form-select" required></select>
           </div>
 
-          <!-- Datos de equipo (se muestran solo si es alistamiento o reinstalación) -->
-          <div id="datos-equipo-fields" style="display:none;">
-            <div class="mb-3">
-              <label class="form-label">🔑 Serial</label>
-              <input type="text" name="serial" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">💻 Modelo</label>
-              <input type="text" name="modelo" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">📝 Placa del equipo</label>
-              <input type="text" name="placa_equipo" class="form-control">
+          <!-- Campos ocultos dinámicos -->
+          <div id="datosEquipoFields" class="mb-3" style="display:none;">
+            <label class="form-label">🔧 Datos del Equipo</label>
+            <input type="text" name="serial" id="serial" class="form-control mb-2" placeholder="Serial">
+            <input type="text" name="modelo" id="modelo" class="form-control mb-2" placeholder="Modelo">
+            <input type="text" name="placa_equipo" id="placa_equipo" class="form-control mb-2" placeholder="Placa">
+            <div class="alert alert-info mt-2" id="avisoCampos">
+              ⚠️ Obligatorio solo para <b>Alistamiento</b> o <b>Reinstalación de OS</b>.
             </div>
           </div>
 
-          <!-- Detalles -->
           <div class="mb-3">
             <label class="form-label">📝 Detalles adicionales (opcional)</label>
             <textarea name="detalles" class="form-control" rows="3"></textarea>
           </div>
-
           <button class="btn btn-primary w-100">Generar Formato</button>
         </form>
       </div>
     </div>
   </div>
+
+  {% if resultado %}
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <div class="card p-4">
+        <h4 class="mb-3 text-dark">📄 Resultado</h4>
+        <pre>{{ resultado }}</pre>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </div>
 
 <script>
   const requerimientos = {{ requerimientos|tojson }};
   const incidentes = {{ incidentes|tojson }};
   const selectOpcion = document.getElementById("opcion");
-  const datosEquipoFields = document.getElementById("datos-equipo-fields");
+  const datosEquipoDiv = document.getElementById("datosEquipoFields");
 
   function cargarOpciones(tipo) {
-    selectOpcion.innerHTML = ""; // limpiar
+    selectOpcion.innerHTML = "";
     const opciones = tipo === "req" ? requerimientos : incidentes;
     for (const [key, value] of Object.entries(opciones)) {
       const option = document.createElement("option");
-      option.value = value.toLowerCase(); // valor en minúsculas
+      option.value = key;
       option.textContent = value;
       selectOpcion.appendChild(option);
     }
-    verificarOpcion();
+    selectOpcion.dispatchEvent(new Event("change")); // refrescar
   }
 
-  function verificarOpcion() {
-    const opcion = selectOpcion.value.toLowerCase();
-    if (opcion.includes("alistamiento") || opcion.includes("reinstalacion")) {
-      datosEquipoFields.style.display = "block";
+  // Mostrar/ocultar campos dinámicamente
+  selectOpcion.addEventListener("change", () => {
+    const opcionSeleccionada = selectOpcion.options[selectOpcion.selectedIndex].text;
+    if (opcionSeleccionada.includes("Alistamiento") || opcionSeleccionada.includes("Reinstalacion de OS")) {
+      datosEquipoDiv.style.display = "block";
     } else {
-      datosEquipoFields.style.display = "none";
+      datosEquipoDiv.style.display = "none";
     }
-  }
+  });
 
-  // Escuchar cambios en el select
-  selectOpcion.addEventListener("change", verificarOpcion);
-
-  // Cargar por defecto al abrir (Requerimientos)
   window.onload = () => cargarOpciones("req");
 </script>
 </body>
