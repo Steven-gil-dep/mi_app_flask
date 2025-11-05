@@ -1,86 +1,94 @@
-from flask import Flask, render_template, request, send_file
-from openpyxl import Workbook
-import io
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
+
+# Opciones con su "causa" y una "solución predefinida"
+REQUERIMIENTOS = {
+    1: ("Instalacion y configuracion de OpenVPN",
+        "Se realizó la Instalacion y configuración del aplicativo OpenVPNConnect de manera satisfactoria, se instalan los certificados actuales y el perfil de navegacion requerido verificando la correcta conexion y accesos"),
+    2: ("Instalacion de Sw(Individual)",
+        "Se instala el aplicativo a satisfaccion de manera correcta."),
+    3: ("Instalación de Sw(Varios)",
+        "Se realiza la instalacion de los aplicativos requeridos a satisfaccion de manera correcta."),
+    4: ("Permisos de administrador",
+        "Se otorgaron permisos de administrador temporal comoros según la solicitud, y se le dan indicaciones al usuario"),
+    5: ("Revicion por cambio de equipo",
+        "Se realiza la revicion del equipo de computo, realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker."),
+    6: ("Revisión por retiro",
+        "Se realizó la revisión del equipo por motivo de retiro. realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker, sin evidenciar anomalìas en su funcionamiento durante las pruebas realizadas, se realiza borrado seguro y eliminacion del equipo de Dominio"),
+    7: ("Alistamiento",
+        "Se realizó el alistamiento completo del equipo con cargador en buen estado físico y funcionales, se adjuntan datos de la máquina y fotos."),
+}
+
+INCIDENTES = {
+    1: ("Falla en VPN",
+        "Se diagnosticó y corrigió la falla en el servicio VPN."),
+    2: ("Problemas de red",
+        "Se revisó la conectividad de red y se solucionaron los inconvenientes."),
+    3: ("Error en aplicaciones críticas",
+        "Se identificó y resolvió el error en la aplicación crítica reportada."),
+    4: ("Reinstalacion de OS",
+        "Se reinstala el sistema operativo, se instalan los aplicativos básicos y se verifica que los agentes de seguridad queden reportando en su totalidad."),
+    5: ("Error de inicio al OS (Para Wn)",
+        "Se inicia sesión desde el usuario administrador Local y se realiza comunicación con el servidor del dominio por medio de la red, luego de esto se inicia sesión correctamente."),
+    6: ("Restablecimiento Contraseña AWS",
+        "Se cierra solicitud debido a que el área de soporte TI no cuenta con alcance ni administración de los accesos a AWS, por favor generar solicitud por medio del canal de Slack #devops-faqs por tablero en Jira: https://avaldigitallabs.atlassian.net/jira/software/c/projects/OPS/boards/109."),
+}
+
+
+def generar_formato(tipo, medio, placa, opcion, detalles, serial=None, modelo=None, placa_equipo=None):
+    medio_txt = "Presencial" if medio == "1" else "Virtual"
+
+    if tipo == "req":
+        causa, solucion = REQUERIMIENTOS.get(opcion, ("No especificado", ""))
+        tipo_txt = "Requerimiento"
+    else:
+        causa, solucion = INCIDENTES.get(opcion, ("No especificado", ""))
+        tipo_txt = "Incidente"
+
+    # Agregar detalles
+    if detalles:
+        solucion += f" Detalles adicionales: {detalles}"
+
+    # Validación de datos extra
+    if causa.lower().startswith("alistamiento") or "reinstalacion" in causa.lower():
+        if not serial or not modelo or not placa_equipo:
+            return "❌ Debes llenar Serial, Modelo y Placa para esta opción."
+        solucion += f"""\nSerial: {serial}
+Modelo: {modelo}
+Placa: {placa_equipo}"""
+
+    return f"""Tipo: {tipo_txt}
+Medio: {medio_txt}
+Placa Equipo: {placa}
+Causa: {causa}
+Solución: {solucion}
+¿Autoriza cierre del caso?: Si"""
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     resultado = None
+
     if request.method == "POST":
         placa = request.form.get("placa")
         medio = request.form.get("medio")
-        tipo = request.form.get("tipo")
-        opcion = request.form.get("opcion")
-        detalles = request.form.get("detalles")
-        serial = request.form.get("serial")
-        modelo = request.form.get("modelo")
-        placa_equipo = request.form.get("placa_equipo")
+        tipo = request.form.get("tipo")  # 'req' o 'inc'
+        opcion = int(request.form.get("opcion"))
+        detalles = request.form.get("detalles", "").strip()
 
-        # Texto de salida base
-        resultado = f"Medio: {medio}\nPlaca Equipo: {placa}\nCausa: {opcion}\n"
+        # Campos extra (solo aplican en ciertos casos)
+        serial = request.form.get("serial", "").strip()
+        modelo = request.form.get("modelo", "").strip()
+        placa_equipo = request.form.get("placa_equipo", "").strip()
 
-        # Si es alistamiento o reinstalación, añadimos datos extra
-        if opcion in ["alistamiento", "reinstalacion"]:
-            resultado += (
-                f"Solución: {detalles}\n"
-                f"Serial: {serial}\n"
-                f"Modelo: {modelo}\n"
-                f"Placa: {placa_equipo}"
-            )
-        else:
-            resultado += f"Solución: {detalles}"
+        resultado = generar_formato(tipo, medio, placa, opcion, detalles, serial, modelo, placa_equipo)
 
-    return render_template("form.html", resultado=resultado)
-
-
-@app.route("/download_txt", methods=["POST"])
-def download_txt():
-    output_text = request.form.get("output_text", "")
-    file_stream = io.BytesIO(output_text.encode("utf-8"))
-    file_stream.seek(0)
-
-    return send_file(
-        file_stream,
-        as_attachment=True,
-        download_name="formato.txt",
-        mimetype="text/plain"
-    )
-
-
-@app.route("/download_excel", methods=["POST"])
-def download_excel():
-    output_text = request.form.get("output_text", "")
-
-    # Dividir el texto en líneas y separarlas por ":"
-    rows = []
-    for line in output_text.splitlines():
-        if ":" in line:
-            campo, valor = line.split(":", 1)
-            rows.append((campo.strip(), valor.strip()))
-
-    # Crear Excel en memoria
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Formato"
-
-    # Encabezados
-    ws.append(["Campo", "Valor"])
-
-    # Insertar filas
-    for campo, valor in rows:
-        ws.append([campo, valor])
-
-    # Guardar en memoria
-    file_stream = io.BytesIO()
-    wb.save(file_stream)
-    file_stream.seek(0)
-
-    return send_file(
-        file_stream,
-        as_attachment=True,
-        download_name="formato.xlsx",
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    return render_template(
+        "form.html",
+        resultado=resultado,
+        requerimientos={k: v[0] for k, v in REQUERIMIENTOS.items()},
+        incidentes={k: v[0] for k, v in INCIDENTES.items()}
     )
 
 
