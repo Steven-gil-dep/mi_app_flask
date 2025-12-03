@@ -15,9 +15,9 @@ REQUERIMIENTOS = {
     5: ("Revicion por cambio de equipo",
         "Se realiza la revicion del equipo de computo, realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker."),
     6: ("Revisión por retiro",
-        "Se realizó la revisión del equipo por motivo de retiro. realizando pruebas de componentes de hardware com Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker, sin evidenciar anomalìas en su funcionamiento durante las pruebas realizadas, se realiza borrado seguro y eliminacion del equipo de Dominio"),
+        "Se realizó la revisión del equipo por motivo de retiro. realizando pruebas de componentes de hardware como Teclado, Touchpad, pantalla, Puertos, Càmara, Microfono y Speaker, sin evidenciar anomalìas en su funcionamiento durante las pruebas realizadas, se realiza borrado seguro y eliminacion del equipo de Dominio"),
     7: ("Alistamiento",
-        "Se realizó el alistamiento completo del equipo con cargador en buen estado físico y funcionales, se adjuntan datos de la máquina y fotos."),
+        "Se realizó el alistamiento completo del equipo con cargador /nen buen estado físico y funcionales, se adjuntan datos de la máquina."),
 }
 
 INCIDENTES = {
@@ -96,4 +96,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
