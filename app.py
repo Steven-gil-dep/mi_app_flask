@@ -35,6 +35,8 @@ INCIDENTES = {
         "Se cierra solicitud debido a que el área de soporte TI no cuenta con alcance ni administración de los accesos a AWS, por favor generar solicitud por medio del canal de Slack #devops-faqs por tablero en Jira: https://avaldigitallabs.atlassian.net/jira/software/c/projects/OPS/boards/109."),
     7: ("Fuera de alcance por telefono dañado",
     "Buen dia, Este tipo de requerimiento debe ser notificado por medio de Correo electronico al area administrativa al correo dairon.faustino@avaldigitallabs.com, por tanto, se porcede a dar cierre al caso."),
+    8: ("Error de navegacion por certificado",
+        "Buen dia, Se verifica que el equipo no cuenta con el certificado de navegacion de ATH\nSe procede a instalarlo y luego de esto, logra acceder de manera correcta a la navegacion y accesos Microsoft.."),
 }
 
 
@@ -96,6 +98,7 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
