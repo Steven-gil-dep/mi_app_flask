@@ -54,7 +54,7 @@ def generar_formato(tipo, medio, placa, opcion, detalles, serial=None, modelo=No
 
     # Agregar detalles
     if detalles:
-        solucion += f" Detalles adicionales: {detalles}"
+        solucion += f" \nPruebas realizadas: {detalles}"
 
     # Validación de datos extra
     if causa.lower().startswith("alistamiento") or "reinstalacion" in causa.lower():
@@ -100,6 +100,7 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
